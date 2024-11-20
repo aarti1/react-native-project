@@ -59,7 +59,7 @@ const Details = () => {
 
       <Animatable.Text animation={'slideInUp'} style={styles.title}>Click below to visit the fetched URL:</Animatable.Text>
       {route.params.data.url ? (
-        <AnimatedBtn animation={'slideInUp'}   style={styles.btn} onPress={handlePress} >
+        <AnimatedBtn /*animation={'slideInUp'} */  style={styles.btn} onPress={handlePress} >
           <Text style={styles.btnText}>Open URL</Text> 
         </AnimatedBtn>
         
@@ -170,15 +170,18 @@ const styles = StyleSheet.create({
     height: 20,
   },
   title: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: '800',
     width: '90%',
     marginTop: 10,
     alignSelf: 'center',
+    color:'black'
+
   },
   source: {
     marginLeft: 25,
     marginTop: 10,
+    color:'black'
   },
 
   typeItem: {
@@ -207,16 +210,18 @@ const styles = StyleSheet.create({
     marginLeft: 25,
   },
   btn: {
-    alignSelf:'center',
-    backgroundColor: 'blue',
-    borderRadius:8,
-    padding:8,
-    elevation:4,
-    shadowColor:'black'
+    width: '40%',
+    height: 50,
+    backgroundColor: '#05B681',
+    alignSelf: 'center',
+    marginTop: 20,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   btnText: {
-    color: 'black',
-  fontSize:24,
+    fontSize: 16,
+    color: 'white',
   fontStyle:'normal',
   fontWeight:'bold'
   }
