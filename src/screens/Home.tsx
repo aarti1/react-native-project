@@ -59,16 +59,16 @@ const Home = () => {
       <StatusBar barStyle={'light-content'} />
       <View style={styles.topView}>
         <Animatable.Image
-          animation={'slideInUp'}
+          // animation={'slideInUp'}
           source={require('../images/cooking.jpg')}
           style={styles.banner}
         />
         <View style={styles.tranparentView}>
-          <Animatable.Text animation={'slideInUp'} style={styles.logo}>
+          <Animatable.Text /*animation={'slideInUp'}*/ style={styles.logo}>
             RecipePro
           </Animatable.Text>
           <AnimatedBtn
-            animation={'slideInUp'}
+            // animation={'slideInUp'}
             activeOpacity={0.8}
             style={styles.searchBox}
             onPress={() => {
@@ -80,12 +80,12 @@ const Home = () => {
             />
             <Text style={styles.placeholder}>Please search here.....</Text>
           </AnimatedBtn>
-          <Animatable.Text animation={'slideInUp'} style={styles.note}>
+          <Animatable.Text /*animation={'slideInUp'}*/ style={styles.note}>
             Search 1000+ recipes easily with one click
           </Animatable.Text>
         </View>
       </View>
-      <Animatable.Text animation={'slideInUp'} style={styles.heading}>
+      <Animatable.Text /*animation={'slideInUp'}*/ style={styles.heading}>
         Categories
       </Animatable.Text>
       <View>
@@ -102,7 +102,7 @@ const Home = () => {
                     data: item.title,
                   });
                 }}
-                animation={'slideInUp'}
+               /*animation={'slideInUp'}*/
                 activeOpacity={0.8}
                 style={styles.categoryItem}>
                 <View style={styles.card}>
@@ -114,7 +114,7 @@ const Home = () => {
           }}
         />
       </View>
-      <Animatable.Text animation={'slideInUp'} style={styles.heading}>
+      <Animatable.Text /*animation={'slideInUp'}*/ style={styles.heading}>
         Trendy Reciepes
       </Animatable.Text>
       <View>
@@ -127,7 +127,7 @@ const Home = () => {
           renderItem={({item, index}) => {
             return (
               <AnimatedBtn
-                animation={'slideInUp'}
+              /*animation={'slideInUp'}*/
                 style={styles.recipeItem}
                 onPress={() => {
                   navigation.navigate('Details', {
@@ -147,7 +147,7 @@ const Home = () => {
         />
       </View>
      
-      {/* <View>
+      <View>
         <FlatList
           horizontal
           data={MEAL_FILTERS}
@@ -161,7 +161,7 @@ const Home = () => {
                     data: item.title,
                   });
                 }}
-                animation={'slideInUp'}
+               /*animation={'slideInUp'}*/
                 activeOpacity={0.8}
                 style={styles.categoryItem}>
                 <View style={styles.card}>
@@ -172,7 +172,8 @@ const Home = () => {
             );
           }}
         />
-      </View> */}
+      </View>
+      
       </View>
     </ScrollView>
           </View>
@@ -186,12 +187,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topView: {
+    flex: 1,
     width: '100%',
     height: '40%',
   },
   banner: {
     width: '100%',
-    height: '100%',
+    height: 350,
   },
   tranparentView: {
     width: '100%',

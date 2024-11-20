@@ -6,6 +6,7 @@ import {
   StatusBar,
   Image,
   TextInput,
+  ActivityIndicator,
   FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -15,6 +16,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 const RecipeByCategory = () => {
   const [search, setSearch] = useState('');
   const [recipes, setRecipes] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigation = useNavigation();
   const route = useRoute();
   useEffect(() => {
@@ -22,6 +25,8 @@ const RecipeByCategory = () => {
   }, []);
   const searchRecipe = () => {
     console.log(search);
+    setIsLoading(true); // Start loader
+    setRecipes([]); // Clear recipes while searching
     var myHeaders = new Headers();
     myHeaders.append('accept', 'application/json');
     myHeaders.append('Accept-Language', 'en');
@@ -41,7 +46,10 @@ const RecipeByCategory = () => {
         console.log(result.articles);
         setRecipes(result.articles);
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error))
+      .finally(() => {
+        setIsLoading(false); // Hide loader
+      });
   };
   return (
     <View style={styles.conatainer}>
@@ -53,7 +61,10 @@ const RecipeByCategory = () => {
         }}>
         <Image source={require('../images/back.png')} style={styles.backIcon} />
       </TouchableOpacity>
-
+ {/* Loader */}
+ {isLoading ? (
+        <ActivityIndicator size="large" color="#05B681" style={styles.loader} />
+      ) : (
       <FlatList
         data={recipes}
         renderItem={({item, index}) => {
@@ -78,8 +89,9 @@ const RecipeByCategory = () => {
             </TouchableOpacity>
           );
         }}
-      />
+      />  )}
     </View>
+    
   );
 };
 
@@ -171,5 +183,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
     color: 'green',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

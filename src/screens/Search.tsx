@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import {APP_KEY} from '../Keys';
@@ -16,6 +17,8 @@ const Search = () => {
   const [search, setSearch] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigation = useNavigation();
 
   // const [selectedDish, setSelectedDish] = useState('');
@@ -23,32 +26,51 @@ const Search = () => {
   // const [selectedHealth, setSelectedHealth] = useState('');
   // const [selectedDiet, setSelectedDiet] = useState('');
 
-  const searchRecipe = () => {
-    console.log(search);
+  const searchRecipe = async () => {
+    setIsLoading(true); // Start loader
+    setRecipes([]); // Clear recipes while searching
+        console.log('Search Query:', search);
+  
     var myHeaders = new Headers();
-    myHeaders.append('accept', 'application/json');
+    myHeaders.append('Accept', 'application/json');
     myHeaders.append('Accept-Language', 'en');
-
-    var requestOptions = {
+  
+    const requestOptions = {
       method: 'GET',
       headers: myHeaders,
       redirect: 'follow',
     };
-    let 
-      url = `https://newsapi.org/v2/everything?sources=bbc-news%2Cabc-news%2Cal-jazeera-english&page=1&apiKey=${APP_KEY}&q=${search}`;
   
-
-    fetch(url, requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(result.articles);
+    const url = `https://newsapi.org/v2/everything?sources=bbc-news,abc-news,al-jazeera-english&page=1&apiKey=${APP_KEY}&q=${encodeURIComponent(
+      search
+    )}`;
+  
+    try {
+      const response = await fetch(url, requestOptions);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+  
+      if (result.articles && result.articles.length > 0) {
+        console.log('Fetched Recipes:', result.articles);
         setRecipes(result.articles);
-      })
-      .catch(error => console.log('error', error));
+      } else {
+        console.log('No results found');
+        setRecipes([]);
+      }
+    } catch (error) {
+      console.error('Error fetching recipes:', error.message);
+    } finally {
+      setIsLoading(false); // Hide loader
+    }
   };
+
   return (
     <View style={styles.conatainer}>
-      <StatusBar barStyle={'dark-content'} />
+      <StatusBar barStyle={'light-content'} />
       <TouchableOpacity
         style={styles.backBtn}
         onPress={() => {
@@ -66,6 +88,7 @@ const Search = () => {
           onChangeText={setSearch}
           style={styles.input}
           placeholder="search here...."
+          placeholderTextColor="#888888" 
         />
         {search != '' && (
           <TouchableOpacity
@@ -90,10 +113,16 @@ const Search = () => {
           <Text style={styles.searchTitle}>Search</Text>
         </TouchableOpacity>
       )}
-      <FlatList
-        data={recipes}
-        renderItem={({item, index}) => {
-          return (
+      
+    
+      {/* Loader */}
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#05B681" style={styles.loader} />
+      ) : (
+        <FlatList
+          data={recipes}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
             <TouchableOpacity
               style={styles.recipeItem}
               onPress={() => {
@@ -105,17 +134,17 @@ const Search = () => {
               />
               <View>
                 <Text style={styles.title}>
-                  {item.description > 40
+                  {item.description?.length > 40
                     ? item.description.substring(0, 40) + '...'
                     : item.description}
                 </Text>
-                <Text style={styles.source}>{item.source.name}</Text>
+                <Text style={styles.source}>{item.source?.name}</Text>
               </View>
             </TouchableOpacity>
-          );
-        }}
-      />
-      {recipes && recipes.length > 0 ? (
+          )}
+        />
+      )}
+      {/* {recipes && recipes.length > 0 ? (
         <TouchableOpacity
           style={styles.filterBtn}
           onPress={() => {
@@ -161,7 +190,7 @@ const Search = () => {
             <Text style={styles.btnText}>{'Apply Filters'}</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };
@@ -319,5 +348,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
